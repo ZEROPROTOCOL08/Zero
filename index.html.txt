@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ZERO PROTOCOL - CLASSIFIED SYSTEM</title>
+
+  <!-- Google Fonts: Share Tech Mono & Orbitron -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    /* =====================================================
+       GAYA GLOBAL & PEMUBAH
+    ===================================================== */
+    :root {
+      --bg-color: #030708;
+      --panel-bg: rgba(6, 18, 22, 0.85);
+      --panel-border: #00ff8833;
+      --primary-cyan: #00f0ff;
+      --primary-green: #00ff88;
+      --alert-red: #ff0055;
+      --warning-amber: #ffaa00;
+      --text-main: #c0f0e8;
+      --text-dim: #4a7570;
+      --font-mono: 'Share Tech Mono', monospace;
+      --font-title: 'Orbitron', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Kesan Scanline */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 999;
+      background-size: 100% 3px, 3px 100%;
+      pointer-events: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Rekaan Butang */
+    button {
+      font-family: var(--font-mono);
+      cursor: pointer;
+      border: 1px solid var(--primary-cyan);
+      background: rgba(0, 240, 255, 0.05);
+      color: var(--primary-cyan);
+      padding: 10px 20px;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      background: var(--primary-cyan);
+      color: #000;
+      box-shadow: 0 0 15px var(--primary-cyan);
+    }
+
+    .primary-btn {
+      background: rgba(0, 255, 136, 0.1);
+      border-color: var(--primary-green);
+      color: var(--primary-green);
+      font-weight: bold;
+    }
+
+    .primary-btn:hover {
+      background: var(--primary-green);
+      color: #000;
+      box-shadow: 0 0 15px var(--primary-green);
+    }
+
+    .secondary-btn {
+      border-color: var(--text-dim);
+      color: var(--text-main);
+    }
+
+    /* =====================================================
+       SKRIN MEMUATKAN (LOADING SCREEN)
+    ===================================================== */
+    .loading-screen {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #020506;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+
+    .loading-logo {
+      font-family: var(--font-title);
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      color: #fff;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px var(--primary-cyan);
+    }
+
+    .loading-logo span {
+      color: var(--primary-cyan);
+    }
+
+    .loading-status {
+      font-size: 0.9rem;
+      color: var(--primary-green);
+      margin-bottom: 15px;
+      letter-spacing: 2px;
+    }
+
+    .loading-bar {
+      width: 300px;
+      max-width: 80vw;
+      height: 6px;
+      border: 1px solid var(--primary-green);
+      background: rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    #loadingProgress {
+      width: 0%;
+      height: 100%;
+      background: var(--primary-green);
+      box-shadow: 0 0 10px var(--primary-green);
+      transition: width 0.1s ease;
+    }
+
+    .loading-code {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 3px;
+    }
+
+    /* =====================================================
+       SEKSI UTAMA (LANDING SECTION)
+    ===================================================== */
+    .landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 20px;
+      text-align: center;
+      background: radial-gradient(circle at center, rgba(0, 240, 255, 0.05) 0%, rgba(2, 5, 6, 0.95) 70%);
+    }
+
+    .coordinates {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-align: left;
+      border-left: 2px solid var(--primary-cyan);
+      padding-left: 10px;
+    }
+
+    .status-dot {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 12px;
+      height: 12px;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--primary-green);
+      animation: pulseDot 2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    .landing-content {
+      max-width: 600px;
+      z-index: 2;
+    }
+
+    .classification {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: var(--alert-red);
+      border: 1px solid var(--alert-red);
+      padding: 2px 10px;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      background: rgba(255, 0, 85, 0.05);
+    }
+
+    .landing h1 {
+      font-family: var(--font-title);
+      font-size: 3.5rem;
+      line-height: 1.1;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 10px;
+      letter-spacing: 3px;
+    }
+
+    .landing h1 span {
+      color: var(--primary-cyan);
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      color: var(--text-main);
+      letter-spacing: 3px;
+      margin-bottom: 30px;
+    }
+
+    .landing-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .terminal-line {
+      font-size: 0.9rem;
+      color: var(--primary-green);
+      min-height: 24px;
+    }
+
+    .cursor {
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* =====================================================
+       PAPAN PEMUKA (MAIN DASHBOARD)
+    ===================================================== */
+    .dashboard {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 20px 100px 20px;
+    }
+
+    /* Bar Atas */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: rgba(3, 7, 8, 0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 100;
+    }
+
+    .brand {
+      font-family: var(--font-title);
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+
+    .brand span {
+      color: var(--primary-cyan);
+    }
+
+    .system-clock {
+      font-size: 1.1rem;
+      color: var(--primary-cyan);
+      letter-spacing: 2px;
+    }
+
+    .icon-btn {
+      padding: 5px 10px;
+      font-size: 1rem;
+    }
+
+    /* Seksi Umum */
+    .section {
+      margin-bottom: 40px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      padding: 20px;
+      position: relative;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      font-family: var(--font-title);
+      letter-spacing: 1.5px;
+    }
+
+    .section-title span {
+      color: var(--primary-cyan);
+      font-size: 1.1rem;
+    }
+
+    .section-title small {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+    }
+
+    /* Grid Status */
+    .status-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .status-row {
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 12px;
+      border-left: 2px solid var(--primary-cyan);
+    }
+
+    .status-row span {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 5px;
+    }
+
+    .status-row b {
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+
+    .online { color: var(--primary-green); }
+    .critical { color: var(--alert-red); }
+    .locked { color: var(--warning-amber); }
+
+    .pulse {
+      animation: pulseRed 1.5s infinite;
+    }
+
+    @keyframes pulseRed {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    /* Grid Kad Watak */
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .char-card {
+      background: rgba(0, 240, 255, 0.02);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .char-card:hover {
+      border-color: var(--primary-cyan);
+      background: rgba(0, 240, 255, 0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 240, 255, 0.1);
+    }
+
+    .char-avatar {
+      width: 100%;
+      height: 120px;
+      background: #091316;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3rem;
+      margin-bottom: 12px;
+      border: 1px solid rgba(0, 255, 136, 0.2);
+    }
+
+    .char-name {
+      font-family: var(--font-title);
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .char-role {
+      font-size: 0.8rem;
+      color: var(--primary-cyan);
+      margin-bottom: 8px;
+    }
+
+    .char-status {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    /* Grid Kad Episod */
+    .episode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    .ep-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--panel-border);
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .ep-card:hover {
+      border-color: var(--primary-green);
+      background: rgba(0, 255, 136, 0.08);
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+    }
+
+    .ep-card.highlight {
+      border-color: var(--primary-cyan);
+      background: rgba(0, 240, 255, 0.08);
+    }
+
+    .ep-num {
+      font-size: 0.8rem;
+      color: var(--primary-green);
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .ep-title {
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .ep-desc {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+      margin-bottom: 15px;
+    }
+
+    /* Panel Berkunci */
+    .locked-section {
+      border-color: rgba(255, 0, 85, 0.3);
+    }
+
+    .locked-panel {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    .lock-icon {
+      font-size: 2.5rem;
+      color: var(--alert-red);
+      margin-bottom: 10px;
+    }
+
+    .locked-panel h2 {
+      font-family: var(--font-title);
+      color: var(--alert-red);
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
+
+    .locked-panel p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    .locked-items, .future-items {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .locked-items span {
+      background: rgba(255, 0, 85, 0.1);
+      border: 1px solid var(--alert-red);
+      color: var(--alert-red);
+      padding: 4px 10px;
+      font-size: 0.75rem;
+    }
+
+    .future-items div {
+      background: rgba(255, 170, 0, 0.05);
+      border: 1px solid var(--warning-amber);
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    .future-items b {
+      display: block;
+      color: var(--warning-amber);
+      font-size: 0.85rem;
+    }
+
+    .future-items span {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* Panel Carian */
+    .search-panel {
+      margin-bottom: 30px;
+    }
+
+    .search-panel input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--primary-cyan);
+      padding: 12px 15px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .search-panel input:focus {
+      box-shadow: 0 0 10px var(--primary-cyan);
+    }
+
+    #searchResults {
+      margin-top: 15px;
+      display: grid;
+      gap: 10px;
+    }
+
+    /* Tiker Mesej */
+    .system-message {
+      position: fixed;
+      bottom: 60px;
+      left: 0; right: 0;
+      background: rgba(0, 255, 136, 0.1);
+      border-top: 1px solid var(--primary-green);
+      border-bottom: 1px solid var(--primary-green);
+      padding: 5px 20px;
+      font-size: 0.8rem;
+      color: var(--primary-green);
+      letter-spacing: 1px;
+      pointer-events: none;
+      z-index: 90;
+    }
+
+    /* Navigasi Peranti Mudah Alih */
+    .mobile-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: #030708;
+      border-top: 1px solid var(--panel-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .nav-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5px;
+    }
+
+    .nav-btn span { font-size: 1.2rem; }
+    .nav-btn small { font-size: 0.65rem; margin-top: 2px; }
+
+    .nav-btn.active, .nav-btn:hover {
+      color: var(--primary-cyan);
+      background: transparent;
+      box-shadow: none;
+    }
+
+    /* =====================================================
+       MODAL & PEMBACA SKRIP TULISAN BESAR
+    ===================================================== */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(2, 5, 6, 0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 15px;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-window {
+      background: var(--panel-bg);
+      border: 1px solid var(--primary-cyan);
+      width: 100%;
+      max-width: 850px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 25px;
+      position: relative;
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.25);
+    }
+
+    .episode-window {
+      background: #050b0e;
+      border: 2px solid var(--primary-green);
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: 1px solid var(--alert-red);
+      color: var(--alert-red);
+      font-size: 1.5rem;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      background: var(--alert-red);
+      color: #000;
+      box-shadow: 0 0 10px var(--alert-red);
+    }
+
+    /* Bekas Skrip Bertulisan Besar */
+    .script-container {
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid var(--primary-green);
+      padding: 25px;
+      margin-top: 20px;
+      font-family: inherit;
+      white-space: pre-wrap;
+      line-height: 1.8;
+      color: #ffffff;
+      font-size: 1.15rem; /* Saiz tulisan besar */
+      max-height: 70vh;
+      overflow-y: auto;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .redacted-document {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(0,0,0,0.5);
+      border: 1px dashed var(--text-dim);
+      color: #111;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      letter-spacing: 2px;
+    }
+
+    .archive-list {
+      margin-top: 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .archive-list div {
+      background: rgba(0, 240, 255, 0.03);
+      border: 1px solid rgba(0, 240, 255, 0.1);
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .archive-list small {
+      color: var(--alert-red);
+      border: 1px solid var(--alert-red);
+      padding: 2px 6px;
+    }
+
+    @media (max-width: 600px) {
+      .landing h1 { font-size: 2.5rem; }
+      .tagline { font-size: 0.9rem; }
+      .dashboard { padding-top: 70px; }
+      .episode-window { padding: 15px; }
+      .script-container { font-size: 1rem; padding: 15px; line-height: 1.6; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       SKRIN MEMUATKAN
+  ===================================================== -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-logo">
+      ZERO<span>PROTOCOL</span>
+    </div>
+    <div class="loading-status" id="loadingStatus">
+      INITIALIZING SECURE CONNECTION...
+    </div>
+    <div class="loading-bar">
+      <div id="loadingProgress"></div>
+    </div>
+    <div class="loading-code">
+      ARGOS // SECURE CHANNEL 08
+    </div>
+  </div>
+
+  <!-- =====================================================
+       APLIKASI UTAMA
+  ===================================================== -->
+  <div id="app" class="app hidden">
+
+    <!-- LANDING -->
+    <section id="landing" class="landing">
+      <div class="coordinates">
+        03°08' N / 101°41' E<br>
+        SECURE NODE: ARGOS-08
+      </div>
+
+      <div class="status-dot"></div>
+
+      <div class="landing-content">
+        <div class="classification">
+          CLASSIFIED // LEVEL BLACK
+        </div>
+
+        <h1>
+          ZERO<br>
+          <span>PROTOCOL</span>
+        </h1>
+
+        <p class="tagline">
+          EVERY SECRET HAS A PRICE.
+        </p>
+
+        <div class="landing-buttons">
+          <button id="enterSystem" class="primary-btn">
+            ENTER SYSTEM
+          </button>
+          <button id="classifiedFiles" class="secondary-btn">
+            CLASSIFIED FILES
+          </button>
+        </div>
+
+        <div class="terminal-line">
+          <span>&gt;</span>
+          <span id="typingText"></span>
+          <span class="cursor">_</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAPAN PEMUKA -->
+    <main id="dashboard" class="dashboard hidden">
+
+      <!-- BAR ATAS -->
+      <header class="topbar">
+        <div class="brand">
+          ZERO<span>PROTOCOL</span>
+        </div>
+        <div class="system-clock" id="systemClock">
+          00:00:00
+        </div>
+        <button id="soundToggle" class="icon-btn" title="Aktif/Nyahaktif Audio">
+          🔊
+        </button>
+      </header>
+
+      <!-- PANELS CARIAN -->
+      <section id="searchPanel" class="search-panel hidden">
+        <input id="searchInput" type="text" placeholder="SEARCH CLASSIFIED DATABASE..." autocomplete="off">
+        <div id="searchResults"></div>
+      </section>
+
+      <!-- STATUS SISTEM -->
+      <section class="section">
+        <div class="section-title">
+          <span>SYSTEM STATUS</span>
+          <small>ARGOS NETWORK</small>
+        </div>
+
+        <div class="status-panel">
+          <div class="status-row">
+            <span>ARGOS NETWORK</span>
+            <b class="online">ONLINE</b>
+          </div>
+          <div class="status-row">
+            <span>THREAT LEVEL</span>
+            <b class="critical pulse">CRITICAL</b>
+          </div>
+          <div class="status-row">
+            <span>PROJECT HELIOS</span>
+            <b style="color: var(--warning-amber);">CLASSIFIED</b>
+          </div>
+          <div class="status-row">
+            <span>WHITE 8</span>
+            <b class="online">ACTIVE</b>
+          </div>
+          <div class="status-row">
+            <span>ZERO PROTOCOL</span>
+            <b class="locked">LOCKED</b>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAIL INTELEGENS -->
+      <section class="section" id="filesSection">
+        <div class="section-title">
+          <span>INTELLIGENCE FILES</span>
+          <small>5 RECORDS LOADED</small>
+        </div>
+
+        <div id="characterGrid" class="character-grid"></div>
+      </section>
+
+      <!-- EPISODE DATABASE -->
+      <section class="section">
+        <div class="section-title">
+          <span>EPISODE DATABASE</span>
+          <small>SEASON 1</small>
+        </div>
+
+        <div id="episodeGrid" class="episode-grid"></div>
+      </section>
+
+      <!-- SEASON 2 -->
+      <section class="section locked-section">
+        <div class="section-title">
+          <span>ZERO PROTOCOL — SEASON 2</span>
+          <small>ACCESS LEVEL: BLACK</small>
+        </div>
+
+        <div class="locked-panel">
+          <div class="lock-icon">🔒</div>
+          <h2>ACCESS DENIED</h2>
+          <p>CLEARANCE LEVEL BLACK REQUIRED</p>
+
+          <div class="locked-items">
+            <span>ARGOS</span>
+            <span>INTERPOL</span>
+            <span>WHITE 8</span>
+            <span>ZAIM</span>
+            <span>HAN</span>
+            <span>REBOKU</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEASON 3 -->
+      <section class="section locked-section">
+        <div class="section-title">
+          <span>ZERO PROTOCOL — SEASON 3</span>
+          <small>4 YEARS LATER</small>
+        </div>
+
+        <div class="locked-panel">
+          <div class="lock-icon">◉</div>
+          <h2>FUTURE FILE</h2>
+          <p>TEMPORAL ACCESS RESTRICTED</p>
+
+          <div class="future-items">
+            <div>
+              <b>ZAIM</b>
+              <span>PRESUMED DEAD</span>
+            </div>
+            <div>
+              <b>HAN</b>
+              <span>UNKNOWN CONNECTION</span>
+            </div>
+            <div>
+              <b>ALYA</b>
+              <span>TOURIST IN CHINA</span>
+            </div>
+            <div>
+              <b>SHÍLUÒ VILLAGE</b>
+              <span>LOCATION FILED</span>
+            </div>
+            <div>
+              <b>REBOKU</b>
+              <span>UNKNOWN</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MESEJ TIKER SISTEM -->
+      <div id="systemMessage" class="system-message">
+        SYSTEM INITIALIZED // SECURE NODE READY
+      </div>
+    </main>
+
+    <!-- NAVIGASI MOBILE -->
+    <nav class="mobile-nav">
+      <button class="nav-btn active" id="navHome">
+        <span>⌂</span>
+        <small>HOME</small>
+      </button>
+
+      <button class="nav-btn" id="searchButton">
+        <span>⌕</span>
+        <small>SEARCH</small>
+      </button>
+
+      <button class="nav-btn" id="navFiles">
+        <span>▣</span>
+        <small>FILES</small>
+      </button>
+    </nav>
+  </div>
+
+  <!-- =====================================================
+       MODAL DOSSIER
+  ===================================================== -->
+  <div id="dossierModal" class="modal">
+    <div class="modal-window">
+      <button class="close-modal" data-close="dossierModal">×</button>
+      <div class="classification">CLASSIFIED DOSSIER</div>
+      <div id="dossierContent"></div>
+      <div class="redacted-document">
+        <div>████████████████████</div>
+        <div>███████ █████████</div>
+        <div>██████████████████████</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       MODAL EPISOD / SKRIP
+  ===================================================== -->
+  <div id="episodeModal" class="modal">
+    <div class="episode-window">
+      <button class="close-modal" data-close="episodeModal">×</button>
+      <div class="classification" id="epClassTitle">CLASSIFIED BRIEFING</div>
+      <div id="episodeContent"></div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       MODAL CLASSIFIED FILES
+  ===================================================== -->
+  <div id="classifiedModal" class="modal">
+    <div class="modal-window">
+      <button class="close-modal" data-close="classifiedModal">×</button>
+      <div class="classification">ARGOS ARCHIVE</div>
+      <h2 style="font-family: var(--font-title); color: var(--primary-cyan); margin: 10px 0;">CLASSIFIED FILES</h2>
+      <div style="color: var(--alert-red); font-size: 0.8rem; margin-bottom: 15px;">
+        UNAUTHORIZED ACCESS WILL BE LOGGED.
+      </div>
+
+      <div class="archive-list">
+        <div>
+          <span>FILE-001</span>
+          <b>PROJECT HELIOS</b>
+          <small>TOP SECRET</small>
+        </div>
+        <div>
+          <span>FILE-002</span>
+          <b>WHITE 8</b>
+          <small>BLACK</small>
+        </div>
+        <div>
+          <span>FILE-003</span>
+          <b>ARGOS OPERATIVES</b>
+          <small>RESTRICTED</small>
+        </div>
+        <div>
+          <span>FILE-004</span>
+          <b>POLITICAL NETWORK</b>
+          <small>CLASSIFIED</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       LOGIK JAVASCRIPT
+  ===================================================== -->
+  <script>
+    /* =====================================================
+       TEKS SKRIP ASAL SAiZ BESAR
+    ===================================================== */
+    const EPISODE_1_TEXT = `🎬 SEASON 1 — EPISODE 1
+Episode Title: “Bayang Pertama”
+──────────────────────────
+
+⸻
+
+🎥 SCENE 1 — MALAM, PELABUHAN SULIT (LUAR NEGARA)
+	1.	Hujan renyai. Kamera drone menyusuri kontena besar.
+	2.	Bunyi walkie-talkie sayup dalam gelap.
+	3.	Dua pengawal berbaju hitam berjalan antara kontena.
+	4.	Pengawal A: “Target masuk 90 saat.”
+	5.	Pengawal B: “Ejen baru tu? Hmph.” (SCENE COUNT 1)
+
+⸻
+
+	6.	Tiba-tiba lampu padam — BOOM.
+	7.	Gelap 3 saat, cuma bunyi nafas & tapak kaki.
+	8.	SWISH — tumbukan senyap.
+	9.	Lampu kecemasan merah menyala.
+	10.	ejen 8 berdiri di belakang mereka. (SCENE COUNT 2)
+
+⸻
+
+	11.	memakai topeng hitam, mata tajam.
+	12.	egen 8(perlahan): “aku tak suka buang masa.”
+	13.	PAP PAP — dua tembakan tepat.
+	14.	Mereka jatuh serentak.
+	15.	ejen 8 bergerak ke kontena hujung bertanda A.R.G.O.S. (SCENE COUNT 3)
+
+⸻
+
+	16.	Dia imbas kod keselamatan.
+	17.	Pintu logam terbuka perlahan.
+	18.	Seorang lelaki tua terikat di kerusi — cedera parah.
+	19.	Lelaki Tua: “Kau… tak tahu apa yang kau masuk ni…”
+	20.	ejen 8 duduk perlahan di depan. (SCENE COUNT 4)
+
+⸻
+
+	21.	ejen 8. “Siapa dalang projek hitam ni?”
+	22.	Lelaki Tua tergelak terbatuk darah.
+	23.	ejen 8 keluarkan gambar ayah Alya Rahman.
+	24.	Zaim: “Dia terlibat?”
+	25.	Lelaki Tua: “…bukan terlibat… dia puncanya.” (SCENE COUNT 5)
+
+⸻
+
+🎥 SCENE 2 — HQ ORGANISASI (BILIK GELAP)
+	26.	Skrin hologram biru memaparkan rakaman dron.
+	27.	Director Iman berdiri membelakangi cahaya.
+	28.	Iman: “ejen 8. Misi pertama selesai?”
+	29.	ejen 8 angguk perlahan.
+	30.	ejen 8: “dia disahkan dalang.” (SCENE COUNT 6)
+
+⸻
+
+	31.	Director Iman: “Langkah seterusnya… dekatkan diri dengan dato rahman untuk dapat lagi banyak bukti.” Faham
+	32.	ejen 8 terdiam seketika. Tapi macam mana
+/.jadi pemandu,kawan,cleaner, tukang masak,tukang kebun dan paling susah tapi paling senang dapat bukti jadi anak dia AKA(menantu
+	33.	ejen 8: “Saya perlukan identiti awam.”
+	34.	Iman: “Semua sudah disediakan.”
+	35.	Iman (sinis): “Dan jangan buat   apa-apa selain arahan.” (SCENE COUNT 7)
+
+⸻
+
+🎥 SCENE 3 — RUMAH ALYA, PAGI
+	36.	Rumah moden, matahari pagi lembut masuk tingkap.
+	37.	Alya 24 tahun — cantik lembut, kelihatan murung.
+	38.	Dia makan roti sambil menatap telefon.
+	39.	TV: “Alya Rahman dijangka hadir bersama pasangannya—”
+	40.	Alya matikan TV cepat. (SCENE COUNT 8)
+
+⸻
+
+	41.	Alya: “Pasangan pun tak ada…”
+	42.	Pembantu Nisa masuk membawa fail jadual.
+	43.	Nisa: “Ayah cik pesan… tahun ni mesti bawa teman.”
+	44.	Alya menarik nafas panjang.
+	45.	Alya: “Sediakan jadual. Saya tak nak jumpa sesiapa.” (SCENE COUNT 9)
+
+⸻
+
+🎥 SCENE 4 — KAFE KECIL / JALAN RAYA
+	46.	ejen 8 dalam identiti awam—kemas, low profile—masuk kafe.
+Nama:ZAIM Umur 25
+	47.	Dia buka fail kecil bertulis Target: Alya Rahman.
+	48.	Gambar Alya tersenum.
+	49.	Zaim bisik: “Awak bukan sasaran saya. Ayah awak.”
+	50.	Dia tutup fail. (SCENE COUNT 10)
+
+⸻
+
+	51.	Pintu kafe terbuka kuat.
+	52.	Alya masuk sambil hampir terjatuh.
+	53.	Zaim reflek—tangkap lengan Alya.
+	54.	Alya: “Oh! Terima kasih—”
+	55.	Mereka saling pandang. (SCENE COUNT 11)
+
+⸻
+
+	56.	Close-up 2 saat — first connection.
+	57.	Alya senyum malu.
+	58.	Alya: “Saya memang cuai.”
+	59.	Zaim: “Awak okay.”
+	60.	Alya ketawa kecil, pergi ke kaunter. (SCENE COUNT 12)
+
+⸻
+
+	61.	Zaim memerhati dari jauh.
+	62.	Nafasnya turun naik sedikit.
+	63.	Zaim (bisik):
+	64.	“Inilah pintu masuk misi aku…”
+	65.	Fade out. (SCENE COUNT 13)`;
+
+    /* =====================================================
+       PANGKALAN DATA
+    ===================================================== */
+    const CHARACTERS = [
+      {
+        id: "zaim",
+        name: "ZAIM (EJEN 8)",
+        role: "FIELD OPERATIVE / EX-ARGOS",
+        status: "ACTIVE / AGE 25",
+        avatar: "👤",
+        bio: "Elite tactical specialist. Currently adopting a low-profile civilian persona to investigate Dato' Rahman.",
+        clearance: "LEVEL BLACK"
+      },
+      {
+        id: "alya",
+        name: "ALYA RAHMAN",
+        role: "TARGET / DATO' RAHMAN'S DAUGHTER",
+        status: "AGE 24 / SURVEILLANCE TARGET",
+        avatar: "👩‍💻",
+        bio: "Daughter of the primary syndicate target. Living under media pressure and family expectations.",
+        clearance: "RESTRICTED"
+      },
+      {
+        id: "iman",
+        name: "DIRECTOR IMAN",
+        role: "HQ DIRECTOR",
+        status: "ACTIVE",
+        avatar: "🕶️",
+        bio: "Head of covert operations directing Ejen 8 to infiltrate Dato' Rahman's inner circle.",
+        clearance: "COMMANDER"
+      },
+      {
+        id: "han",
+        name: "HAN",
+        role: "ANALYST & INTEL BROKER",
+        status: "ACTIVE",
+        avatar: "🕵️",
+        bio: "Central intelligence node decrypting satellite feeds and dark web comms.",
+        clearance: "LEVEL 4"
+      },
+      {
+        id: "reboku",
+        name: "REBOKU",
+        role: "WHITE 8 SYNDICATE LEAD",
+        status: "HOSTILE",
+        avatar: "🥷",
+        bio: "Shadow leader operating White 8 network behind Project Helios.",
+        clearance: "CLASSIFIED"
+      }
+    ];
+
+    const EPISODES = [
+      {
+        id: "ep1",
+        num: "EPISODE 01",
+        title: "Bayang Pertama",
+        desc: "Misi di pelabuhan sulit bermula. Ejen 8 menerima arahan rapatkan diri dengan keluarga Dato' Rahman.",
+        hasScript: true
+      },
+      {
+        id: "ep2",
+        num: "EPISODE 02",
+        title: "PROJECT HELIOS",
+        desc: "Han uncovers classified schematics regarding a satellite weapon system linked to White 8.",
+        hasScript: false
+      },
+      {
+        id: "ep3",
+        num: "EPISODE 03",
+        title: "SHADOW TRACE",
+        desc: "A covert operation in Kuala Lumpur reveals deep political ties to the syndicate.",
+        hasScript: false
+      },
+      {
+        id: "ep4",
+        num: "EPISODE 04",
+        title: "ZERO POINT",
+        desc: "The breach is triggered. Zero Protocol goes live across all regional channels.",
+        hasScript: false
+      }
+    ];
+
+    const SYSTEM_LOGS = [
+      "DECRYPTING EPISODE 1 DATA...",
+      "SATELLITE ARGOS-08 LINK ESTABLISHED",
+      "WARNING: UNAUTHORIZED PORT SCAN DETECTED",
+      "CLEARANCE LEVEL BLACK ACTIVATED",
+      "TARGET LOCATED: ALYA RAHMAN"
+    ];
+
+    /* =====================================================
+       AUDIO SYNTHESIZER
+    ===================================================== */
+    let audioEnabled = true;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playBeep(freq = 800, type = 'sine', duration = 0.05) {
+      if (!audioEnabled) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    /* =====================================================
+       PEMULAAN
+    ===================================================== */
+    window.onload = () => {
+      let progress = 0;
+      const progressBar = document.getElementById('loadingProgress');
+
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 15) + 5;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          setTimeout(showLanding, 400);
+        }
+        progressBar.style.width = progress + '%';
+        playBeep(400 + progress * 5, 'square', 0.02);
+      }, 100);
+    };
+
+    function showLanding() {
+      document.getElementById('loadingScreen').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      startTypingEffect();
+    }
+
+    /* =====================================================
+       TYPING EFFECT
+    ===================================================== */
+    const typingPhrases = [
+      "INITIALIZING SECURE ARGOS CHANNEL...",
+      "AUTHENTICATING USER CLEARANCE...",
+      "EPISODE 1: BAYANG PERTAMA LOADED...",
+      "AWAITING COMMAND INPUT..."
+    ];
+
+    function startTypingEffect() {
+      let phraseIdx = 0;
+      let charIdx = 0;
+      let isDeleting = false;
+      const target = document.getElementById('typingText');
+
+      function type() {
+        const currentPhrase = typingPhrases[phraseIdx];
+
+        if (isDeleting) {
+          target.textContent = currentPhrase.substring(0, charIdx - 1);
+          charIdx--;
+        } else {
+          target.textContent = currentPhrase.substring(0, charIdx + 1);
+          charIdx++;
+          playBeep(1200, 'sine', 0.01);
+        }
+
+        let speed = isDeleting ? 30 : 60;
+
+        if (!isDeleting && charIdx === currentPhrase.length) {
+          speed = 2000;
+          isDeleting = true;
+        } else if (isDeleting && charIdx === 0) {
+          isDeleting = false;
+          phraseIdx = (phraseIdx + 1) % typingPhrases.length;
+          speed = 500;
+        }
+
+        setTimeout(type, speed);
+      }
+      type();
+    }
+
+    /* =====================================================
+       CLOCK & SYSTEM MESSAGES
+    ===================================================== */
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      const secs = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('systemClock').textContent = `${hours}:${mins}:${secs}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    setInterval(() => {
+      const msg = SYSTEM_LOGS[Math.floor(Math.random() * SYSTEM_LOGS.length)];
+      const el = document.getElementById('systemMessage');
+      if (el) {
+        el.textContent = `SYSTEM // ${msg}`;
+        playBeep(300, 'triangle', 0.03);
+      }
+    }, 6000);
+
+    /* =====================================================
+       PAPARAN DATA
+    ===================================================== */
+    function renderCharacters() {
+      const grid = document.getElementById('characterGrid');
+      grid.innerHTML = CHARACTERS.map(c => `
+        <div class="char-card" onclick="openDossier('${c.id}')">
+          <div class="char-avatar">${c.avatar}</div>
+          <div class="char-name">${c.name}</div>
+          <div class="char-role">${c.role}</div>
+          <div class="char-status">${c.status}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderEpisodes() {
+      const grid = document.getElementById('episodeGrid');
+      grid.innerHTML = EPISODES.map(e => `
+        <div class="ep-card ${e.hasScript ? 'highlight' : ''}" onclick="openEpisode('${e.id}')">
+          <div>
+            <div class="ep-num">${e.num} ${e.hasScript ? '★ FULL SCRIPT' : ''}</div>
+            <div class="ep-title">${e.title}</div>
+            <div class="ep-desc">${e.desc}</div>
+          </div>
+          <button class="${e.hasScript ? 'primary-btn' : 'secondary-btn'}" style="width:100%; margin-top: 10px;">
+            ${e.hasScript ? '🎬 PAPAR SKRIP EPISOD 1' : 'CLASSIFIED'}
+          </button>
+        </div>
+      `).join('');
+    }
+
+    renderCharacters();
+    renderEpisodes();
+
+    /* =====================================================
+       NAVIGASI
+    ===================================================== */
+    document.getElementById('enterSystem').addEventListener('click', () => {
+      playBeep(1000, 'sine', 0.1);
+      document.getElementById('landing').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      window.scrollTo(0,0);
+    });
+
+    document.getElementById('classifiedFiles').addEventListener('click', () => {
+      playBeep(600, 'square', 0.08);
+      openModal('classifiedModal');
+    });
+
+    document.getElementById('soundToggle').addEventListener('click', (e) => {
+      audioEnabled = !audioEnabled;
+      e.target.textContent = audioEnabled ? '🔊' : '🔇';
+    });
+
+    document.getElementById('navHome').addEventListener('click', () => {
+      playBeep(800, 'sine', 0.05);
+      document.getElementById('searchPanel').classList.add('hidden');
+      document.getElementById('landing').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('searchButton').addEventListener('click', () => {
+      playBeep(900, 'sine', 0.05);
+      document.getElementById('landing').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      const searchPanel = document.getElementById('searchPanel');
+      searchPanel.classList.toggle('hidden');
+      if (!searchPanel.classList.contains('hidden')) {
+        document.getElementById('searchInput').focus();
+      }
+    });
+
+    document.getElementById('navFiles').addEventListener('click', () => {
+      playBeep(700, 'sine', 0.05);
+      document.getElementById('landing').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      document.getElementById('filesSection').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    /* =====================================================
+       CARIAN
+    ===================================================== */
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      const resultsContainer = document.getElementById('searchResults');
+
+      if (!query) {
+        resultsContainer.innerHTML = '';
+        return;
+      }
+
+      const charMatches = CHARACTERS.filter(c => c.name.toLowerCase().includes(query) || c.role.toLowerCase().includes(query));
+      const epMatches = EPISODES.filter(ep => ep.title.toLowerCase().includes(query) || ep.desc.toLowerCase().includes(query));
+
+      let html = '';
+
+      charMatches.forEach(c => {
+        html += `
+          <div class="ep-card" onclick="openDossier('${c.id}')">
+            <div class="ep-num">DOSSIER FILE</div>
+            <div class="ep-title">${c.name} - ${c.role}</div>
+          </div>
+        `;
+      });
+
+      epMatches.forEach(e => {
+        html += `
+          <div class="ep-card" onclick="openEpisode('${e.id}')">
+            <div class="ep-num">${e.num}</div>
+            <div class="ep-title">${e.title}</div>
+          </div>
+        `;
+      });
+
+      if (!html) {
+        html = `<div style="color: var(--alert-red); font-size: 0.85rem; padding: 10px;">NO RECORD FOUND FOR "${query.toUpperCase()}"</div>`;
+      }
+
+      resultsContainer.innerHTML = html;
+    });
+
+    /* =====================================================
+       MODAL CONTROLLER
+    ===================================================== */
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+      playBeep(400, 'sine', 0.05);
+    }
+
+    document.querySelectorAll('.close-modal').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetModal = btn.getAttribute('data-close');
+        closeModal(targetModal);
+      });
+    });
+
+    window.openDossier = (id) => {
+      playBeep(900, 'triangle', 0.08);
+      const c = CHARACTERS.find(char => char.id === id);
+      if (!c) return;
+
+      const content = document.getElementById('dossierContent');
+      content.innerHTML = `
+        <div style="font-size: 3rem; text-align: center; margin-bottom: 10px;">${c.avatar}</div>
+        <h2 style="font-family: var(--font-title); color: #fff; text-align: center;">${c.name}</h2>
+        <div style="color: var(--primary-cyan); text-align: center; font-size: 0.85rem; margin-bottom: 15px;">${c.role}</div>
+        <div style="font-size: 0.8rem; margin-bottom: 10px;"><b>STATUS:</b> <span style="color: var(--primary-green);">${c.status}</span></div>
+        <div style="font-size: 0.8rem; margin-bottom: 15px;"><b>CLEARANCE:</b> ${c.clearance}</div>
+        <p style="font-size: 0.85rem; color: var(--text-main); line-height: 1.4;">${c.bio}</p>
+      `;
+      openModal('dossierModal');
+    };
+
+    window.openEpisode = (id) => {
+      playBeep(950, 'triangle', 0.08);
+      const e = EPISODES.find(ep => ep.id === id);
+      if (!e) return;
+
+      const content = document.getElementById('episodeContent');
+      const titleElement = document.getElementById('epClassTitle');
+
+      if (e.id === 'ep1') {
+        titleElement.textContent = "CLASSIFIED SCRIPT FILE";
+        content.innerHTML = `
+          <div style="color: var(--primary-green); font-size: 0.9rem; font-weight: bold; margin-bottom: 5px;">${e.num}</div>
+          <h2 style="font-family: var(--font-title); color: #fff; font-size: 1.5rem; margin-bottom: 10px;">${e.title}</h2>
+          <div class="script-container">${EPISODE_1_TEXT}</div>
+        `;
+      } else {
+        titleElement.textContent = "CLASSIFIED BRIEFING";
+        content.innerHTML = `
+          <div style="color: var(--primary-green); font-size: 0.8rem; margin-bottom: 5px;">${e.num}</div>
+          <h2 style="font-family: var(--font-title); color: #fff; margin-bottom: 15px;">${e.title}</h2>
+          <p style="font-size: 0.9rem; color: var(--text-main); line-height: 1.5; margin-bottom: 20px;">${e.desc}</p>
+          <div style="color: var(--alert-red); border: 1px solid var(--alert-red); padding: 10px; font-size: 0.8rem;">
+            ACCESS DENIED. CLEARANCE LEVEL BLACK REQUIRED FOR THIS SCRIPT.
+          </div>
+        `;
+      }
+
+      openModal('episodeModal');
+    };
+  </script>
+</body>
+</html>
